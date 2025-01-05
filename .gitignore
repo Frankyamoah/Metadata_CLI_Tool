@@ -1,0 +1,39 @@
+# Byte-compiled files
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+venv/
+env/
+ENV/
+*.env
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# Logs and debugging
+*.log
+*.bak
+*.swp
+
+# Python dependencies
+*.lock
+*.coverage
+*.mypy_cache/
+.cache/
+.pytest_cache/
+Pipfile
+Pipfile.lock
+
+# ExifTool cache (if any)
+.exiftool_cache/
