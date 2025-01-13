@@ -140,7 +140,7 @@ def replace_metadata(image_paths, metadata):
                     click.echo(f"Replaced metadata: {key}={value} in {image_path}")
         except Exception as e:
                     # Handle invalid metadata format
-                    click.echo(f"Invalid metadata format: {meta}. Use KEY=VALUE format")
+                    click.echo(f"Invalid metadata format: {e}. Use KEY=VALUE format")
 
 # Function to Verify/Check metaata in an image
 @cli.command()
