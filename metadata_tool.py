@@ -120,4 +120,56 @@ def remove_metadata(image_paths, keys):
     help="Metadata to replace in the format KEY=VALUE. Use multiple options for more fields.",
 )
 def replace_metadata(image_paths, metadata):
+    """
+    Replace metadata in an image
     
+    Args: 
+    image_path (tuple) = Tuple of image paths added as aguements
+    metadata (list) = List of meetadata to replace in the format of Key-Value pairs
+
+    """
+    for image_path in image_paths:
+        try:
+            # Replace each corresponding metadata field in the image
+            for meta in metadata:
+                    key, value = meta.split("=")
+                    subprocess.run(
+                        ["exiftool", f"-{key}={value}", image_path],
+                        capture_output=True,
+                    )
+                    click.echo(f"Replaced metadata: {key}={value} in {image_path}")
+        except Exception as e:
+                    # Handle invalid metadata format
+                    click.echo(f"Invalid metadata format: {meta}. Use KEY=VALUE format")
+
+# Function to Verify/Check metaata in an image
+@cli.command()
+@click.argument("image_paths", nargs=-1, type=click.Path(exists=True))
+@click.option(
+    "--keys",
+    multiple=True,
+    help="Metadata keys to verify. Use multiple options for more keys.",
+)
+
+def verify_metadta(image_paths):
+    """
+    Verify the metadata of one or more images.
+
+    Args:
+    image_paths (tuple): Tuple of image paths provided as arguments.
+    """
+    for image_path in image_paths:
+        try:
+            # Run ExifTool to verify metadata
+            result = subprocess.run(
+                ["exiftool", image_path], capture_output=True, text=True
+            )
+            # Output the metadata to the console
+            click.echo(f"Metadata for {image_path}:\n{result.stdout}")
+        except Exception as e:
+            # Handle errors for each image
+            click.echo(f"Error verifying metadata for {image_path}: {e}")
+
+if __name__ == "__main__":
+    cli() # Run the CLI tool
+                    
