@@ -1,5 +1,4 @@
 import click # Importing click for CLI functionality
-import os # For file path operations
 import subprocess # To run ExifTool commands
 
 DEFAULT_METADATA = {
@@ -16,33 +15,34 @@ def cli():
 # Function to view metadata of a file
 @cli.command()
 @click.argument("image_paths", nargs=-1, type=click.Path(exists=True))
-def view_metadata(image_path):
+def view_metadata(image_paths):
     """
     View metadata of an image file
 
     Args: 
-    image_path (str): This provides the path to the image file that needs its metadata viewed
+    image_path (tuple): This provides the path to the image file that needs its metadata viewed
     
     This function uses the 'subprocess' module to invoke the ExifTool command line tool
     to extract and display the metadata of the specified image file. This then prints the extracted
     metadata to the console.
     """
-    try:
+    for image_path in image_paths:  # Add loop to handle multiple files
+        try:
         # Use subprocess.run to execute the ExifTool command-line tool
-        result = subprocess.run(
-            ["exiftool", image_path],       # Command to execute the ExifTool tool with the image path as an arguement
-            capture_output=True,            # Capture both stdout and stderr to process the output
-            text=True                       # Return the output as a string
+            result = subprocess.run(
+                ["exiftool", image_path],       # Command to execute the ExifTool tool with the image path as an arguement
+                capture_output=True,            # Capture both stdout and stderr to process the output
+                text=True                       # Return the output as a string
         )
         # Print the metadata to the console
-        click.echo(result.stdout)
-    except Exception as e: 
+            click.echo(result.stdout)
+        except Exception as e: 
         # If an exception occurs (e.g. Exif tool not installed or the file doesnt exist), handle the error
-        click.echo(f"Error viewing metadata: {e}") # Print the error message to the console
+            click.echo(f"Error viewing metadata: {e}") # Print the error message to the console
 
 # Functionto to add metadata to a file
 @cli.command()
-@click.arguement("image_paths", nargs=-1, type=click.Path(exists=True)) # Arguements for the command line, image path, multiple values allowed, must be a valid path
+@click.argument("image_paths", nargs=-1, type=click.Path(exists=True)) # Arguements for the command line, image path, multiple values allowed, must be a valid path
 @click.option(
     "--metadata",
     multiple=True,
@@ -53,7 +53,7 @@ def add_metadata(image_paths, metadata):
     Add metadata to an image. Formate: KEY=VALUE.
     
     Args:
-    image_path (str): This provides the path to the image file
+    image_path (tuple): This provides the path to the image file
     metadata(str): This provides the metadata to be added to the image
     
     """
